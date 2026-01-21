@@ -1,0 +1,190 @@
+{
+  "name": "Complete Web Audit Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerType": "manually"
+      },
+      "id": "1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "string": [
+            {
+              "name": "website_url",
+              "value": "https://google.com"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Set Website URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [450, 300],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/pagespeedonline/v5/runPagespeed",
+        "method": "GET",
+        "qs": {
+          "url": "={{ $node['Set Website URL'].json.website_url }}",
+          "key": "AIzaSyB6X-5LHlLAZfH6qNUqgV8K62CpWLoSR_U",
+          "category": ["PERFORMANCE", "ACCESSIBILITY", "BEST_PRACTICES", "SEO"],
+          "strategy": "MOBILE"
+        }
+      },
+      "id": "3",
+      "name": "Google PageSpeed Insights API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $node['Set Website URL'].json.website_url }}",
+        "method": "GET",
+        "responseFormat": "text"
+      },
+      "id": "4",
+      "name": "Fetch Website HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 450]
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $node['Fetch Website HTML'].data.body.toString();\nconst extractMeta = (content, pattern) => {\n  const match = content.match(pattern);\n  return match ? match[1] : 'Not found';\n};\nconst titleMatch = html.match(/<title>([^<]+)<\\/title>/i);\nconst title = titleMatch ? titleMatch[1] : 'No title';\nconst descriptionPattern = /<meta\\s+name=[\"']description[\"']\\s+content=[\"']([^\"']*)[\"']/i;\nconst description = extractMeta(html, descriptionPattern);\nconst h1Pattern = /<h1[^>]*>([^<]+)<\\/h1>/i;\nconst h1 = extractMeta(html, h1Pattern);\nconst imgWithoutAlt = (html.match(/<img\\s+(?!.*alt)[^>]*>/gi) || []).length;\nconst totalImages = (html.match(/<img[^>]*>/gi) || []).length;\nconst isHttps = $node['Set Website URL'].json.website_url.startsWith('https');\nconst internalLinks = (html.match(/href=[\"'](\\\/[^\"']*)[\"']/gi) || []).length;\nconst externalLinks = (html.match(/href=[\"'](https?:\\/\\/[^\"']*)[\"']/gi) || []).length;\nconst sitemapPattern = /<link[^>]*rel=[\"']?alternate[\"']?[^>]*href=[\"']?([^\"'\\s>]+\\.xml)[\"']?[^>]*>/i;\nconst sitemapUrl = extractMeta(html, sitemapPattern);\nconst hasViewport = html.includes('viewport');\nconst canonicalPattern = /<link[^>]*rel=[\"']?canonical[\"']?[^>]*href=[\"']([^\"']*)[\"']/i;\nconst canonical = extractMeta(html, canonicalPattern);\nreturn {\n  seo_audit: {\n    title: title,\n    title_length: title.length,\n    description: description,\n    description_length: description.length,\n    h1_tag: h1,\n    has_viewport: hasViewport,\n    canonical_tag: canonical,\n    images_without_alt: imgWithoutAlt,\n    total_images: totalImages,\n    alt_text_coverage: totalImages > 0 ? ((totalImages - imgWithoutAlt) / totalImages * 100).toFixed(2) + '%' : 'No images'\n  },\n  security_audit: {\n    is_https: isHttps,\n    protocol: isHttps ? 'HTTPS' : 'HTTP'\n  },\n  technical_audit: {\n    internal_links: internalLinks,\n    external_links: externalLinks,\n    total_links: internalLinks + externalLinks,\n    has_sitemap: sitemapUrl !== 'Not found'\n  }\n};"
+      },
+      "id": "5",
+      "name": "Parse HTML & SEO Audit",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 450]
+    },
+    {
+      "parameters": {
+        "jsCode": "const psData = $node['Google PageSpeed Insights API'].json;\nconst scores = psData.lighthouseResult?.categories || {};\nconst metrics = psData.lighthouseResult?.audits || {};\nconst getCoreWebVital = (auditKey) => {\n  const audit = metrics[auditKey];\n  return audit ? {\n    score: (audit.score * 100).toFixed(2),\n    value: audit.numericValue ? audit.numericValue.toFixed(2) : 'N/A',\n    displayValue: audit.displayValue || 'N/A'\n  } : null;\n};\nreturn {\n  pagespeed_scores: {\n    performance: (scores.performance?.score * 100).toFixed(2) || 'N/A',\n    accessibility: (scores.accessibility?.score * 100).toFixed(2) || 'N/A',\n    best_practices: (scores['best-practices']?.score * 100).toFixed(2) || 'N/A',\n    seo: (scores.seo?.score * 100).toFixed(2) || 'N/A'\n  },\n  core_web_vitals: {\n    largest_contentful_paint: getCoreWebVital('largest-contentful-paint'),\n    first_input_delay: getCoreWebVital('first-input-delay'),\n    cumulative_layout_shift: getCoreWebVital('cumulative-layout-shift'),\n    first_contentful_paint: getCoreWebVital('first-contentful-paint'),\n    speed_index: getCoreWebVital('speed-index')\n  },\n  performance_metrics: {\n    main_thread_work: metrics['mainthread-work-breakdown']?.displayValue || 'N/A',\n    bootup_time: metrics['bootup-time']?.displayValue || 'N/A',\n    network_requests: metrics['network-requests']?.displayValue || 'N/A',\n    dom_size: metrics['dom-size']?.displayValue || 'N/A'\n  }\n};"
+      },
+      "id": "6",
+      "name": "Process PageSpeed Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const seoData = $node['Parse HTML & SEO Audit'].json;\nconst psData = $node['Process PageSpeed Data'].json;\nconst url = $node['Set Website URL'].json.website_url;\nconst timestamp = new Date().toISOString();\nreturn {\n  audit_timestamp: timestamp,\n  audited_url: url,\n  summary: {\n    overall_health: (() => {\n      const perfScore = parseFloat(psData.pagespeed_scores.performance);\n      const seoScore = parseFloat(psData.pagespeed_scores.seo);\n      const accessScore = parseFloat(psData.pagespeed_scores.accessibility);\n      const avgScore = (perfScore + seoScore + accessScore) / 3;\n      if (avgScore >= 90) return 'Excellent';\n      if (avgScore >= 75) return 'Good';\n      if (avgScore >= 50) return 'Needs Improvement';\n      return 'Poor';\n    })(),\n    audit_categories: ['Performance', 'SEO', 'Accessibility', 'Security', 'Technical']\n  },\n  performance_audit: psData.pagespeed_scores,\n  core_web_vitals: psData.core_web_vitals,\n  performance_metrics: psData.performance_metrics,\n  seo_audit: seoData.seo_audit,\n  security_audit: seoData.security_audit,\n  technical_audit: seoData.technical_audit,\n  recommendations: {\n    performance: psData.pagespeed_scores.performance < 75 ? ['Optimize images and use modern formats', 'Minimize JavaScript and CSS', 'Enable browser caching', 'Use CDN for static assets'] : ['Performance is good'],\n    seo: seoData.seo_audit.description === 'Not found' ? ['Add meta description (50-160 characters)', 'Optimize title tag (50-60 characters)'] : ['SEO basics are in place'],\n    security: !seoData.security_audit.is_https ? ['Enable HTTPS/SSL certificate'] : ['HTTPS is properly configured'],\n    accessibility: psData.pagespeed_scores.accessibility < 80 ? ['Improve color contrast ratios', 'Add ARIA labels', 'Ensure keyboard navigation'] : ['Accessibility is good']\n  }\n};"
+      },
+      "id": "7",
+      "name": "Generate Audit Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 375]
+    },
+    {
+      "parameters": {}
+    },
+    {
+      "parameters": {
+        "content": "={{ JSON.stringify($node['Generate Audit Report'].json, null, 2) }}"
+      },
+      "id": "9",
+      "name": "Output JSON Report",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1250, 500]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Website URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Website URL": {
+      "main": [
+        [
+          {
+            "node": "Google PageSpeed Insights API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Website HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google PageSpeed Insights API": {
+      "main": [
+        [
+          {
+            "node": "Process PageSpeed Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Website HTML": {
+      "main": [
+        [
+          {
+            "node": "Parse HTML & SEO Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse HTML & SEO Audit": {
+      "main": [
+        [
+          {
+            "node": "Generate Audit Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process PageSpeed Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Audit Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Audit Report": {
+      "main": [
+        [
+          {
+            "node": "Output JSON Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true
+}
