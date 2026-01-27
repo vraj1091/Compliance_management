@@ -8,8 +8,8 @@ WORKDIR /app/frontend
 # Copy frontend package files
 COPY frontend/package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install ALL dependencies (including devDependencies needed for build)
+RUN npm ci
 
 # Copy frontend source
 COPY frontend/ ./
@@ -26,6 +26,7 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy backend requirements
@@ -43,13 +44,20 @@ COPY --from=frontend-builder /app/frontend/dist ./static
 # Create uploads directory
 RUN mkdir -p uploads
 
+# Make startup script executable
+RUN chmod +x /app/start.sh
+
 # Expose port
 EXPOSE 8000
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV DATABASE_URL=sqlite+aiosqlite:///./qms_erp.db
+ENV PORT=8000
 
-# Initialize database and start server
-CMD python -c "import asyncio; from database import init_db; from seed import seed_data; asyncio.run(init_db()); asyncio.run(seed_data())" && \
-    uvicorn main:app --host 0.0.0.0 --port 8000
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Start application
+CMD ["/bin/bash", "/app/start.sh"]

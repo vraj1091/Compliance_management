@@ -23,5 +23,7 @@ services:
         value: 1.0.0
       - key: DEBUG
         value: false
+      - key: PORT
+        value: 8000
     healthCheckPath: /health
     autoDeploy: true
