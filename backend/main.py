@@ -6,6 +6,9 @@ print("DEBUG: main.py is loading...")
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
 
 from config import settings
 from database import init_db
@@ -146,6 +149,31 @@ async def health_check():
 @app.get("/debug-headers", tags=["Root"])
 async def debug_headers(request: Request):
     return {"headers": dict(request.headers)}
+
+
+# Mount static files for production (frontend build)
+static_dir = Path(__file__).parent / "static"
+if static_dir.exists():
+    app.mount("/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets")
+    
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        """Serve the React SPA for all non-API routes."""
+        # If it's an API route, let it pass through
+        if full_path.startswith("api/"):
+            return {"error": "Not found"}
+        
+        # Check if file exists in static directory
+        file_path = static_dir / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+        
+        # Otherwise serve index.html (SPA routing)
+        index_path = static_dir / "index.html"
+        if index_path.exists():
+            return FileResponse(index_path)
+        
+        return {"error": "Frontend not built"}
 
 
 if __name__ == "__main__":

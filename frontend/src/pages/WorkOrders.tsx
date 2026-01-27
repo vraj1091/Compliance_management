@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Factory, Search, Eye, Edit, Play, CheckCircle, Trash2 } from 'lucide-react';
+import { Plus, Factory, Search, Eye, Play, CheckCircle, Trash2 } from 'lucide-react';
 import { workOrdersApi, itemsApi } from '../api';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -38,7 +38,7 @@ const WorkOrders: React.FC = () => {
     // Fetch items for dropdown
     const { data: items = [] } = useQuery({
         queryKey: ['items'],
-        queryFn: itemsApi.getAll,
+        queryFn: () => itemsApi.getAll(),
     });
 
     // Create mutation

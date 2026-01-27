@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
+import Modal from './Modal';
 
 interface ConfirmDialogProps {
     isOpen: boolean;
@@ -22,49 +23,43 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     cancelText = 'Cancel',
     isDestructive = false,
 }) => {
-    if (!isOpen) return null;
-
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" style={{ maxWidth: '400px' }} onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        {isDestructive && (
-                            <div style={{
-                                width: '40px',
-                                height: '40px',
-                                borderRadius: '50%',
-                                background: 'var(--error-50)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}>
-                                <AlertTriangle size={20} color="var(--error-600)" />
-                            </div>
-                        )}
-                        <h3>{title}</h3>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={title}
+            size="sm"
+        >
+            <div className="py-2">
+                {isDestructive && (
+                    <div className="flex items-center gap-3 mb-4 text-error-600 bg-error-50 p-3 rounded-lg">
+                        <AlertTriangle size={24} />
+                        <span className="font-medium">Warning: Destructive Action</span>
                     </div>
-                </div>
-                <div className="modal-body">
-                    <p style={{ color: 'var(--text-secondary)' }}>{message}</p>
-                </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={onClose}>
-                        {cancelText}
-                    </button>
-                    <button
-                        type="button"
-                        className={`btn ${isDestructive ? 'btn-danger' : 'btn-primary'}`}
-                        onClick={() => {
-                            onConfirm();
-                            onClose();
-                        }}
-                    >
-                        {confirmText}
-                    </button>
-                </div>
+                )}
+                <p className="text-secondary leading-relaxed">{message}</p>
             </div>
-        </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+                <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={onClose}
+                >
+                    {cancelText}
+                </button>
+                <button
+                    type="button"
+                    className={`btn ${isDestructive ? 'btn-danger' : 'btn-primary'}`}
+                    onClick={() => {
+                        onConfirm();
+                        onClose();
+                    }}
+                >
+                    {confirmText}
+                </button>
+            </div>
+        </Modal>
     );
 };
 

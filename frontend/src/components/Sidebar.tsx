@@ -20,8 +20,18 @@ import {
     ShoppingCart,
     Building2,
     Boxes,
-    UserCheck,
+    Search,
+    BookOpen,
+    BarChart3,
+    Activity,
+    RefreshCw,
+    Truck,
+    Microscope,
+    Zap,
+    Scale,
+    FileCheck,
     FlaskConical,
+    UserCheck,
 } from 'lucide-react';
 
 interface NavItem {
@@ -31,49 +41,144 @@ interface NavItem {
     children?: { label: string; path: string }[];
 }
 
+// Full navigation structure based on the provided detailed mind map
 const navigation: { section: string; items: NavItem[] }[] = [
     {
-        section: 'Overview',
+        section: 'Core',
         items: [
-            { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
+            { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
         ],
     },
     {
-        section: 'Quality',
+        section: 'Commercial',
         items: [
-            { label: 'Documents', path: '/documents', icon: <FileText size={20} /> },
-            { label: 'Training', path: '/training', icon: <GraduationCap size={20} /> },
-            { label: 'Nonconformances', path: '/nc', icon: <AlertTriangle size={20} /> },
-            { label: 'CAPAs', path: '/capa', icon: <CheckCircle size={20} /> },
-            { label: 'Audits', path: '/audits', icon: <ClipboardCheck size={20} /> },
-            { label: 'MR / QA', path: '/mr', icon: <UserCheck size={20} /> },
+            {
+                label: 'Marketing',
+                icon: <ShoppingCart size={18} />,
+                children: [
+                    { label: 'Enquiries', path: '/marketing/enquiries' },
+                    { label: 'Market Research (AI)', path: '/marketing/research' },
+                    { label: 'Costing & Quotation', path: '/marketing/quotations' },
+                    { label: 'Customer PO', path: '/marketing/orders' },
+                    { label: 'Internal Work Order', path: '/marketing/internal-orders' },
+                ],
+            },
+            {
+                label: 'Purchase',
+                icon: <Building2 size={18} />,
+                children: [
+                    { label: 'Vendors', path: '/purchase/vendors' },
+                    { label: 'Vendor Audit', path: '/purchase/audits' },
+                    { label: 'Vendor Rating', path: '/purchase/ratings' },
+                    { label: 'Purchase Orders', path: '/purchase/orders' },
+                ],
+            },
+            {
+                label: 'Stores',
+                icon: <Boxes size={18} />,
+                children: [
+                    { label: 'Material Receipt', path: '/store/receipts' },
+                    { label: 'Material Issue', path: '/store/issues' },
+                    { label: 'Material Return', path: '/store/returns' },
+                    { label: 'Inventory', path: '/inventory' },
+                ],
+            },
         ],
     },
     {
-        section: 'Manufacturing',
+        section: 'Operations',
         items: [
-            { label: 'Items', path: '/items', icon: <Package size={20} /> },
-            { label: 'Work Orders', path: '/work-orders', icon: <Factory size={20} /> },
-            { label: 'Inventory', path: '/inventory', icon: <Warehouse size={20} /> },
-            { label: 'Quality Control', path: '/qc', icon: <TestTube size={20} /> },
-            { label: 'QC Lab Records', path: '/qc-lab', icon: <FlaskConical size={20} /> },
+            {
+                label: 'Production',
+                path: '/work-orders',
+                icon: <Factory size={18} />,
+                children: [
+                    { label: 'Work Orders', path: '/work-orders' },
+                    { label: 'Schedule', path: '/production/schedule' },
+                ]
+            },
+            {
+                label: 'Maintenance',
+                icon: <Wrench size={18} />,
+                children: [
+                    { label: 'Preventive (Utilities)', path: '/maintenance/preventive-utility' },
+                    { label: 'Preventive (Shopfloor)', path: '/maintenance/preventive-shop' },
+                    { label: 'Breakdown', path: '/maintenance/breakdown' },
+                ],
+            },
+            {
+                label: 'Service & Install',
+                icon: <Truck size={18} />,
+                children: [
+                    { label: 'Installation', path: '/service/installation' },
+                    { label: 'Servicing', path: '/service/servicing' },
+                ],
+            },
         ],
     },
     {
-        section: 'Departments',
+        section: 'Quality Management',
         items: [
-            { label: 'HR', path: '/hr', icon: <Users size={20} /> },
-            { label: 'Maintenance', path: '/maintenance', icon: <Wrench size={20} /> },
-            { label: 'Marketing', path: '/marketing', icon: <ShoppingCart size={20} /> },
-            { label: 'Purchase', path: '/purchase', icon: <Building2 size={20} /> },
-            { label: 'Store', path: '/store', icon: <Boxes size={20} /> },
+            {
+                label: 'Design & Dev',
+                icon: <Microscope size={18} />,
+                children: [
+                    { label: 'Planning & Inputs', path: '/design/planning' },
+                    { label: 'Outputs & Review', path: '/design/review' },
+                    { label: 'Verification & Install', path: '/design/verification' },
+                    { label: 'Design Transfer', path: '/design/transfer' },
+                    { label: 'Changes & Files', path: '/design/changes' },
+                ],
+            },
+            {
+                label: 'QA & Compliance',
+                icon: <CheckCircle size={18} />,
+                children: [
+                    { label: 'Internal Audit', path: '/audits' },
+                    { label: 'Management Review', path: '/mr' },
+                    { label: 'Non-Conformances', path: '/nc' },
+                    { label: 'CAPA', path: '/capa' },
+                    { label: 'Risk Analysis', path: '/risk' },
+                    { label: 'Post Market Surv.', path: '/pms' },
+                ],
+            },
+            {
+                label: 'Testing & Validation',
+                icon: <TestTube size={18} />,
+                children: [
+                    { label: 'Calibration', path: '/qc/calibration' },
+                    { label: 'Biocompatibility', path: '/qc/bio' },
+                    { label: 'Cleanroom', path: '/qc/cleanroom' },
+                    { label: 'Software Validation', path: '/qc/software' },
+                    { label: 'EMC Reports', path: '/qc/emc' },
+                ],
+            },
         ],
     },
     {
-        section: 'Administration',
+        section: 'Organization',
         items: [
-            { label: 'Users', path: '/users', icon: <Users size={20} /> },
-            { label: 'Settings', path: '/settings', icon: <Settings size={20} /> },
+            {
+                label: 'Human Resources',
+                icon: <Users size={18} />,
+                children: [
+                    { label: 'Employees', path: '/hr/employees' },
+                    { label: 'Competence', path: '/hr/competence' },
+                    { label: 'Training', path: '/training' },
+                    { label: 'Medical History', path: '/hr/medical' },
+                ],
+            },
+            {
+                label: 'Documentation',
+                icon: <FileText size={18} />,
+                children: [
+                    { label: 'Internal Docs', path: '/documents' },
+                    { label: 'External Origin', path: '/documents/external' },
+                    { label: 'Literature Review', path: '/documents/literature' },
+                    { label: 'Promotional', path: '/documents/promotional' },
+                ],
+            },
+            { label: 'Settings', path: '/settings', icon: <Settings size={18} /> },
         ],
     },
 ];
@@ -81,6 +186,17 @@ const navigation: { section: string; items: NavItem[] }[] = [
 const Sidebar: React.FC = () => {
     const location = useLocation();
     const [expandedItems, setExpandedItems] = useState<string[]>([]);
+
+    // Auto-expand active groups
+    React.useEffect(() => {
+        navigation.forEach(section => {
+            section.items.forEach(item => {
+                if (item.children && item.children.some(child => location.pathname.startsWith(child.path))) {
+                    setExpandedItems(prev => prev.includes(item.label) ? prev : [...prev, item.label]);
+                }
+            });
+        });
+    }, [location.pathname]);
 
     const toggleExpanded = (label: string) => {
         setExpandedItems((prev) =>
@@ -93,11 +209,11 @@ const Sidebar: React.FC = () => {
             <div className="sidebar-header">
                 <NavLink to="/dashboard" className="sidebar-logo">
                     <div className="sidebar-logo-icon">
-                        <Shield size={24} />
+                        <Shield size={22} color="white" />
                     </div>
                     <div>
-                        <div style={{ fontWeight: 700, fontSize: '1rem' }}>QMS-ERP</div>
-                        <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Medical Device</div>
+                        <div style={{ fontWeight: 700, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>Nexus QMS</div>
+                        <div style={{ fontSize: '0.75rem', opacity: 0.6, fontWeight: 500 }}>Enterprise Edition</div>
                     </div>
                 </NavLink>
             </div>
@@ -110,19 +226,19 @@ const Sidebar: React.FC = () => {
                             item.children ? (
                                 <div key={item.label}>
                                     <div
-                                        className="nav-item"
+                                        className={`nav-item ${expandedItems.includes(item.label) ? 'expanded' : ''}`}
                                         onClick={() => toggleExpanded(item.label)}
                                     >
                                         <span className="nav-item-icon">{item.icon}</span>
                                         <span style={{ flex: 1 }}>{item.label}</span>
                                         {expandedItems.includes(item.label) ? (
-                                            <ChevronDown size={16} />
+                                            <ChevronDown size={14} />
                                         ) : (
-                                            <ChevronRight size={16} />
+                                            <ChevronRight size={14} />
                                         )}
                                     </div>
                                     {expandedItems.includes(item.label) && (
-                                        <div style={{ marginLeft: '2rem' }}>
+                                        <div style={{ marginLeft: '1rem', borderLeft: '1px solid rgba(255,255,255,0.1)', paddingLeft: '0.5rem', marginBottom: '0.5rem' }}>
                                             {item.children.map((child) => (
                                                 <NavLink
                                                     key={child.path}
@@ -130,6 +246,7 @@ const Sidebar: React.FC = () => {
                                                     className={({ isActive }) =>
                                                         `nav-item ${isActive ? 'active' : ''}`
                                                     }
+                                                    style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}
                                                 >
                                                     {child.label}
                                                 </NavLink>

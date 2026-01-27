@@ -1,0 +1,27 @@
+services:
+  # Web Service - QMS-ERP Application
+  - type: web
+    name: qms-erp-app
+    env: docker
+    region: oregon
+    plan: free
+    branch: master
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:///./qms_erp.db
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 480
+      - key: APP_NAME
+        value: Medical Device QMS-ERP
+      - key: APP_VERSION
+        value: 1.0.0
+      - key: DEBUG
+        value: false
+    healthCheckPath: /health
+    autoDeploy: true

@@ -14,26 +14,28 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
 
     const sizeClasses = {
         sm: 'max-w-md',
-        md: 'max-w-2xl',
-        lg: 'max-w-4xl',
-        xl: 'max-w-6xl',
+        md: 'max-w-lg',
+        lg: 'max-w-3xl',
+        xl: 'max-w-5xl',
     };
 
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div
-                className={`modal-content ${sizeClasses[size]}`}
+                className={`modal ${sizeClasses[size]}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="modal-header">
-                    <h3>{title}</h3>
-                    <button className="modal-close" onClick={onClose}>
+                    <h3 className="modal-title">{title}</h3>
+                    <button
+                        className="btn btn-secondary btn-icon"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
                         <X size={20} />
                     </button>
                 </div>
-                <div className="modal-body">
-                    {children}
-                </div>
+                {children}
             </div>
         </div>
     );

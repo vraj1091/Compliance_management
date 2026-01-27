@@ -13,17 +13,17 @@ const Inventory: React.FC = () => {
     // Fetch inventory data
     const { data: inventoryItems = [], isLoading } = useQuery({
         queryKey: ['inventory'],
-        queryFn: inventoryApi.getAll,
+        queryFn: () => inventoryApi.getAll(),
     });
 
     const { data: lots = [] } = useQuery({
         queryKey: ['lots'],
-        queryFn: inventoryApi.getLots,
+        queryFn: () => inventoryApi.getLots(),
     });
 
     const { data: summary } = useQuery({
         queryKey: ['inventory-summary'],
-        queryFn: inventoryApi.getSummary,
+        queryFn: () => inventoryApi.getSummary(),
     });
 
     // Adjust inventory mutation

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, CheckCircle, Search, Eye, Edit, Calendar } from 'lucide-react';
+import { Plus, CheckCircle, Search, Eye, Edit, Calendar, X } from 'lucide-react';
 import { capaApi } from '../api';
 
 interface CAPA {
@@ -300,8 +300,9 @@ const CAPAs: React.FC = () => {
                             <button
                                 className="btn btn-secondary btn-icon"
                                 onClick={() => setShowCreateModal(false)}
+                                aria-label="Close"
                             >
-                                ×
+                                <X size={20} />
                             </button>
                         </div>
                         <div className="modal-body">
