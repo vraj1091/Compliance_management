@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { hrApi } from '../api';
-import { Users, GraduationCap, Award, Calendar, Plus, Search, Filter } from 'lucide-react';
+import { Users, GraduationCap, Award, Plus, Search } from 'lucide-react';
 import Modal from '../components/Modal';
 
 interface Employee {

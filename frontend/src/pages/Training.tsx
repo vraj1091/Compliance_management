@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { GraduationCap, Users, BookOpen, CheckCircle, AlertCircle, Clock, Plus, Eye } from 'lucide-react';
+import { GraduationCap, Users, BookOpen, CheckCircle, AlertCircle, Clock, Eye } from 'lucide-react';
 import { trainingApi, hrApi } from '../api';
 import Modal from '../components/Modal';
 

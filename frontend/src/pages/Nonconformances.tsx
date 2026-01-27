@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, AlertTriangle, Search, Eye, Edit, ArrowRight, Trash2 } from 'lucide-react';
+import { Plus, AlertTriangle, Search, Eye, Trash2, ArrowRight } from 'lucide-react';
 import { ncApi } from '../api';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';

@@ -1,6 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { ArrowRight, BarChart3, FileText, Plus, Search, Filter } from 'lucide-react';
+import { BarChart3, FileText, Plus, Search, Filter } from 'lucide-react';
 
 interface ModulePageProps {
     title: string;
@@ -9,7 +8,6 @@ interface ModulePageProps {
 }
 
 const ModulePage: React.FC<ModulePageProps> = ({ title, description, kpis }) => {
-    const location = useLocation();
 
     // Default KPIs if none provided
     const defaultKpis = [

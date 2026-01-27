@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Warehouse, Package, Layers, AlertTriangle, Plus } from 'lucide-react';
+import { Warehouse, Package, Layers, AlertTriangle } from 'lucide-react';
 import { inventoryApi } from '../api';
 import Modal from '../components/Modal';
 

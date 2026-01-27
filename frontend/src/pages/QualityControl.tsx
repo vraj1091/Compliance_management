@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { TestTube, ClipboardCheck, CheckCircle, XCircle, Clock, Plus } from 'lucide-react';
+import { TestTube, ClipboardCheck, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { qcApi, workOrdersApi } from '../api';
 import Modal from '../components/Modal';
+
+interface WorkOrder {
+    id: string;
+    work_order_number: string;
+    [key: string]: any;
+}
 
 const QualityControl: React.FC = () => {
     const [showInspectionModal, setShowInspectionModal] = useState(false);
@@ -19,9 +25,9 @@ const QualityControl: React.FC = () => {
         queryFn: qcApi.getInspections,
     });
 
-    const { data: workOrders = [] } = useQuery({
+    const { data: workOrders = [] } = useQuery<WorkOrder[]>({
         queryKey: ['work-orders'],
-        queryFn: workOrdersApi.getAll,
+        queryFn: () => workOrdersApi.getAll(),
     });
 
     // Create inspection mutation
