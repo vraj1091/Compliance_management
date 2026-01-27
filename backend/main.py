@@ -129,7 +129,7 @@ app.include_router(mr_router)
 app.include_router(qc_extended_router)
 
 
-@app.get("/", tags=["Root"])
+@app.get("/api", tags=["Root"])
 async def root():
     """Root endpoint - API health check."""
     return {
@@ -144,6 +144,17 @@ async def root():
 async def health_check():
     """Health check endpoint for monitoring."""
     return {"status": "ok"}
+
+
+@app.get("/debug-static", tags=["Root"])
+async def debug_static():
+    """Debug endpoint to check static files."""
+    static_dir = Path(__file__).parent / "static"
+    return {
+        "static_dir_exists": static_dir.exists(),
+        "static_dir_path": str(static_dir),
+        "files": list(str(f) for f in static_dir.rglob("*")) if static_dir.exists() else []
+    }
 
 
 @app.get("/debug-headers", tags=["Root"])
@@ -163,6 +174,12 @@ if static_dir.exists():
         if full_path.startswith("api/"):
             return {"error": "Not found"}
         
+        # If it's empty or root, serve index.html
+        if not full_path or full_path == "/":
+            index_path = static_dir / "index.html"
+            if index_path.exists():
+                return FileResponse(index_path)
+        
         # Check if file exists in static directory
         file_path = static_dir / full_path
         if file_path.is_file():
@@ -174,6 +191,17 @@ if static_dir.exists():
             return FileResponse(index_path)
         
         return {"error": "Frontend not built"}
+else:
+    @app.get("/")
+    async def root_fallback():
+        """Fallback when static files don't exist."""
+        return {
+            "status": "healthy",
+            "app": settings.APP_NAME,
+            "version": settings.APP_VERSION,
+            "message": "Welcome to the Medical Device QMS-ERP API",
+            "note": "Frontend static files not found. Build the frontend first."
+        }
 
 
 if __name__ == "__main__":
