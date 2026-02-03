@@ -6,8 +6,8 @@ import { Shield, ArrowRight, Lock, User, CheckCircle2, Globe, Zap } from 'lucide
 const Login: React.FC = () => {
     const navigate = useNavigate();
     const { login, isAuthenticated, isLoading } = useAuth();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('admin');
+    const [password, setPassword] = useState('Admin@123');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [activeFeature, setActiveFeature] = useState(0);
