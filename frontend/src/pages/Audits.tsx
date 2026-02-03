@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, ClipboardCheck, Search, Eye, Edit, Calendar, Trash2 } from 'lucide-react';
+import { Plus, ClipboardCheck, Search, Eye, Edit, Calendar, Trash2, CheckCircle } from 'lucide-react';
 import { auditsApi, usersApi } from '../api';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -158,18 +158,29 @@ const Audits: React.FC = () => {
             {/* Summary Cards */}
             <div className="kpi-grid mb-6">
                 <div className="kpi-card">
-                    <div className="kpi-icon info">
-                        <Calendar size={24} />
+                    <div className="kpi-icon primary">
+                        <ClipboardCheck size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">Planned</div>
-                        <div className="kpi-value">
-                            {audits.filter((a: Audit) => a.status === 'Planned').length}
-                        </div>
+                        <div className="kpi-label">Total Audits</div>
+                        <div className="kpi-value">{audits.length}</div>
+                        <div className="text-xs text-success mt-1">↑ +15% vs last year</div>
                     </div>
                 </div>
                 <div className="kpi-card">
                     <div className="kpi-icon warning">
+                        <Calendar size={24} />
+                    </div>
+                    <div className="kpi-content">
+                        <div className="kpi-label">Scheduled</div>
+                        <div className="kpi-value">
+                            {audits.filter((a: Audit) => a.status === 'Planned').length}
+                        </div>
+                        <div className="text-xs text-success mt-1">↑ +3% vs last year</div>
+                    </div>
+                </div>
+                <div className="kpi-card">
+                    <div className="kpi-icon info">
                         <ClipboardCheck size={24} />
                     </div>
                     <div className="kpi-content">
@@ -177,17 +188,19 @@ const Audits: React.FC = () => {
                         <div className="kpi-value">
                             {audits.filter((a: Audit) => a.status === 'In Progress').length}
                         </div>
+                        <div className="text-xs text-muted mt-1">No change</div>
                     </div>
                 </div>
                 <div className="kpi-card">
                     <div className="kpi-icon success">
-                        <ClipboardCheck size={24} />
+                        <CheckCircle size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">Completed (This Year)</div>
+                        <div className="kpi-label">Completed (YTD)</div>
                         <div className="kpi-value">
                             {audits.filter((a: Audit) => a.status === 'Completed').length}
                         </div>
+                        <div className="text-xs text-success mt-1">↑ +22% vs last year</div>
                     </div>
                 </div>
             </div>

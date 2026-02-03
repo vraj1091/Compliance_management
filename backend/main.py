@@ -9,9 +9,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
+from sqlalchemy import select
 
 from config import settings
-from database import init_db
+from database import init_db, AsyncSessionLocal
+from models import User
+from seed import seed_data
 
 # Import routers
 from routers.auth import router as auth_router
@@ -43,6 +46,18 @@ async def lifespan(app: FastAPI):
     print("Starting Medical Device QMS-ERP System...")
     await init_db()
     print("Database initialized")
+    
+    # Auto-seed if admin user is missing
+    async with AsyncSessionLocal() as db:
+        result = await db.execute(select(User).where(User.username == "admin"))
+        if not result.scalar_one_or_none():
+            print("Admin user not found. Auto-seeding database...")
+            try:
+                await seed_data()
+                print("Database seeded successfully!")
+            except Exception as e:
+                print(f"Error seeding database: {e}")
+    
     yield
     # Shutdown
     print("Shutting down...")

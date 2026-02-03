@@ -122,7 +122,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Analytics & Tasks */}
-            <div className="grid-2 mb-8" style={{ gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+            <div className="grid-2-1 mb-8">
                 {/* Chart Card */}
                 <div className="card full-height">
                     <div className="card-header flex justify-between items-center">
@@ -218,7 +218,7 @@ const Dashboard: React.FC = () => {
                     <h3 className="card-title gap-2">
                         <FileText size={20} /> Action Items
                     </h3>
-                    <button className="btn btn-secondary btn-sm">View All</button>
+                    <button className="btn btn-secondary btn-sm" onClick={() => navigate('/nonconformances')}>View All</button>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="data-table">

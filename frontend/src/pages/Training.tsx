@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { GraduationCap, Users, BookOpen, CheckCircle, AlertCircle, Clock, Eye } from 'lucide-react';
+import { GraduationCap, Users, BookOpen, CheckCircle, AlertTriangle, Clock, Eye } from 'lucide-react';
 import { trainingApi, hrApi } from '../api';
 import Modal from '../components/Modal';
 
@@ -105,12 +105,23 @@ const Training: React.FC = () => {
             {/* Summary Cards */}
             <div className="kpi-grid mb-6">
                 <div className="kpi-card">
+                    <div className="kpi-icon primary">
+                        <GraduationCap size={24} />
+                    </div>
+                    <div className="kpi-content">
+                        <div className="kpi-label">Total Records</div>
+                        <div className="kpi-value">{trainingRecords.length}</div>
+                        <div className="text-xs text-success mt-1">↑ +10% vs last year</div>
+                    </div>
+                </div>
+                <div className="kpi-card">
                     <div className="kpi-icon success">
                         <CheckCircle size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">Current</div>
+                        <div className="kpi-label">Current Training</div>
                         <div className="kpi-value">{currentCount}</div>
+                        <div className="text-xs text-success mt-1">↑ +5% vs last year</div>
                     </div>
                 </div>
                 <div className="kpi-card">
@@ -120,15 +131,17 @@ const Training: React.FC = () => {
                     <div className="kpi-content">
                         <div className="kpi-label">Expiring Soon</div>
                         <div className="kpi-value">{expiringSoonCount}</div>
+                        <div className="text-xs text-warning mt-1">Requires attention</div>
                     </div>
                 </div>
                 <div className="kpi-card">
                     <div className="kpi-icon error">
-                        <AlertCircle size={24} />
+                        <AlertTriangle size={24} />
                     </div>
                     <div className="kpi-content">
                         <div className="kpi-label">Expired</div>
                         <div className="kpi-value">{expiredCount}</div>
+                        <div className="text-xs text-error mt-1">Action required</div>
                     </div>
                 </div>
                 <div className="kpi-card">

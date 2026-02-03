@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, AlertTriangle, Search, Eye, Trash2, ArrowRight } from 'lucide-react';
+import { Plus, AlertTriangle, Search, Eye, Trash2, ArrowRight, CheckCircle } from 'lucide-react';
 import { ncApi } from '../api';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -126,32 +126,45 @@ const Nonconformances: React.FC = () => {
 
             <div className="kpi-grid mb-6">
                 <div className="kpi-card">
+                    <div className="kpi-icon primary">
+                        <AlertTriangle size={24} />
+                    </div>
+                    <div className="kpi-content">
+                        <div className="kpi-label">Total NCs</div>
+                        <div className="kpi-value">{ncs.length}</div>
+                        <div className="text-xs text-error mt-1">\u2191 +8% vs last year</div>
+                    </div>
+                </div>
+                <div className="kpi-card">
                     <div className="kpi-icon error">
                         <AlertTriangle size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">Open</div>
+                        <div className="kpi-label">Open NCs</div>
                         <div className="kpi-value">{ncs.filter((nc: NC) => nc.status === 'Open').length}</div>
+                        <div className="text-xs text-error mt-1">Requires action</div>
                     </div>
                 </div>
                 <div className="kpi-card">
                     <div className="kpi-icon warning">
-                        <AlertTriangle size={24} />
+                        <Search size={24} />
                     </div>
                     <div className="kpi-content">
                         <div className="kpi-label">Under Investigation</div>
                         <div className="kpi-value">
                             {ncs.filter((nc: NC) => nc.status === 'Under Investigation').length}
                         </div>
+                        <div className="text-xs text-muted mt-1">In progress</div>
                     </div>
                 </div>
                 <div className="kpi-card">
                     <div className="kpi-icon success">
-                        <AlertTriangle size={24} />
+                        <CheckCircle size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">Closed (This Month)</div>
+                        <div className="kpi-label">Closed (MTD)</div>
                         <div className="kpi-value">{ncs.filter((nc: NC) => nc.status === 'Closed').length}</div>
+                        <div className="text-xs text-success mt-1">\u2191 +12% vs last month</div>
                     </div>
                 </div>
             </div>

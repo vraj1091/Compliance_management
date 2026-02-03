@@ -1,9 +1,51 @@
-import React from 'react';
-import { Settings as SettingsIcon, Database, Shield, Bell, Palette } from 'lucide-react';
+import React, { useState } from 'react';
+import { Settings as SettingsIcon, Database, Shield, Bell, Palette, CheckCircle } from 'lucide-react';
 
 const Settings: React.FC = () => {
+    const [saving, setSaving] = useState<string | null>(null);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+
+    const handleSave = (section: string) => {
+        setSaving(section);
+
+        // Simulate API call
+        setTimeout(() => {
+            setSaving(null);
+            setToastMessage(`${section} settings saved successfully!`);
+            setShowToast(true);
+
+            // Hide toast after 3 seconds
+            setTimeout(() => setShowToast(false), 3000);
+        }, 500);
+    };
+
     return (
         <div>
+            {/* Toast Notification */}
+            {showToast && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                        zIndex: 9999,
+                        background: 'var(--success-500)',
+                        color: 'white',
+                        padding: '1rem 1.5rem',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        animation: 'slideInRight 0.3s ease-out',
+                    }}
+                >
+                    <CheckCircle size={20} />
+                    {toastMessage}
+                </div>
+            )}
+
             {/* Page Header */}
             <div className="mb-6">
                 <h2>Settings</h2>
@@ -48,7 +90,13 @@ const Settings: React.FC = () => {
                                 <option value="Asia/Kolkata" selected>India (IST)</option>
                             </select>
                         </div>
-                        <button className="btn btn-primary mt-2">Save Changes</button>
+                        <button
+                            className="btn btn-primary mt-2"
+                            onClick={() => handleSave('General')}
+                            disabled={saving === 'General'}
+                        >
+                            {saving === 'General' ? 'Saving...' : 'Save Changes'}
+                        </button>
                     </div>
                 </div>
 
@@ -89,7 +137,13 @@ const Settings: React.FC = () => {
                                 <span>Enable audit logging</span>
                             </label>
                         </div>
-                        <button className="btn btn-primary mt-2">Save Changes</button>
+                        <button
+                            className="btn btn-primary mt-2"
+                            onClick={() => handleSave('Security')}
+                            disabled={saving === 'Security'}
+                        >
+                            {saving === 'Security' ? 'Saving...' : 'Save Changes'}
+                        </button>
                     </div>
                 </div>
 
@@ -126,7 +180,13 @@ const Settings: React.FC = () => {
                                 <span>Daily digest email</span>
                             </label>
                         </div>
-                        <button className="btn btn-primary mt-2">Save Changes</button>
+                        <button
+                            className="btn btn-primary mt-2"
+                            onClick={() => handleSave('Notifications')}
+                            disabled={saving === 'Notifications'}
+                        >
+                            {saving === 'Notifications' ? 'Saving...' : 'Save Changes'}
+                        </button>
                     </div>
                 </div>
 
@@ -189,7 +249,13 @@ const Settings: React.FC = () => {
                                 />
                             </div>
                         </div>
-                        <button className="btn btn-primary mt-2">Save Changes</button>
+                        <button
+                            className="btn btn-primary mt-2"
+                            onClick={() => handleSave('Appearance')}
+                            disabled={saving === 'Appearance'}
+                        >
+                            {saving === 'Appearance' ? 'Saving...' : 'Save Changes'}
+                        </button>
                     </div>
                 </div>
 

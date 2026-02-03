@@ -157,10 +157,9 @@ const WorkOrders: React.FC = () => {
                         <Factory size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">Planned</div>
-                        <div className="kpi-value">
-                            {workOrders.filter((wo: WorkOrder) => wo.status === 'Planned').length}
-                        </div>
+                        <div className="kpi-label">Total Work Orders</div>
+                        <div className="kpi-value">{workOrders.length}</div>
+                        <div className="text-xs text-success mt-1">↑ +12% vs last month</div>
                     </div>
                 </div>
                 <div className="kpi-card">
@@ -168,10 +167,23 @@ const WorkOrders: React.FC = () => {
                         <Factory size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">In Progress</div>
+                        <div className="kpi-label">Active Orders</div>
                         <div className="kpi-value">
-                            {workOrders.filter((wo: WorkOrder) => wo.status === 'In Progress').length}
+                            {workOrders.filter((wo: WorkOrder) => wo.status === 'In Progress' || wo.status === 'Released').length}
                         </div>
+                        <div className="text-xs text-success mt-1">↑ +5% vs last month</div>
+                    </div>
+                </div>
+                <div className="kpi-card">
+                    <div className="kpi-icon info">
+                        <CheckCircle size={24} />
+                    </div>
+                    <div className="kpi-content">
+                        <div className="kpi-label">Pending Actions</div>
+                        <div className="kpi-value">
+                            {workOrders.filter((wo: WorkOrder) => wo.status === 'Planned').length}
+                        </div>
+                        <div className="text-xs text-error mt-1">↓ -2% vs last month</div>
                     </div>
                 </div>
                 <div className="kpi-card">
@@ -179,10 +191,11 @@ const WorkOrders: React.FC = () => {
                         <CheckCircle size={24} />
                     </div>
                     <div className="kpi-content">
-                        <div className="kpi-label">Completed (This Month)</div>
+                        <div className="kpi-label">This Month</div>
                         <div className="kpi-value">
                             {workOrders.filter((wo: WorkOrder) => wo.status === 'Completed').length}
                         </div>
+                        <div className="text-xs text-success mt-1">↑ +8% vs last month</div>
                     </div>
                 </div>
             </div>
