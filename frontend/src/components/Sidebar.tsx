@@ -196,10 +196,7 @@ const Sidebar: React.FC = () => {
                     <div className="sidebar-logo-icon">
                         <Shield size={22} color="white" />
                     </div>
-                    <div>
-                        <div style={{ fontWeight: 700, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>Nexus QMS</div>
-                        <div style={{ fontSize: '0.75rem', opacity: 0.6, fontWeight: 500 }}>Enterprise Edition</div>
-                    </div>
+                    <div style={{ fontWeight: 700, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>Nexus QMS</div>
                 </NavLink>
             </div>
 
